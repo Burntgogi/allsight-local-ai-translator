@@ -67,16 +67,6 @@ Recommended models are default Gemma4 or default Qwen3.6 families. If the select
 
 `Local LLM chunk text count` is the number of DOM text fragments grouped into one request. `Local LLM chunk character limit` is the total source-text character budget for the same request. A new request starts when either limit is reached.
 
-## Development
-
-```powershell
-npm run check
-npm test
-npm run package:store
-```
-
-The store package is generated under `dist/` and includes only `manifest.json`, `src/`, and `assets/`.
-
 <a id="korean"></a>
 
 ## 한국어
@@ -139,13 +129,3 @@ LM Studio 공식 문서:
 추천 모델은 기본 Gemma4 또는 기본 Qwen3.6 계열입니다. 모델명이 `Gemma4`로 감지되면 요청에 `temperature=1.0`, `top_p=0.95`, `top_k=64`를 포함합니다. 다른 모델은 sampling 값을 추가 지정하지 않습니다.
 
 `Local LLM 청크 텍스트 개수`는 한 번의 요청에 묶는 DOM 텍스트 조각 수입니다. `Local LLM 청크 최대 문자 수`는 같은 요청에 포함하는 원문 텍스트의 총 문자 기준입니다. 둘 중 하나가 먼저 한계에 닿으면 다음 요청으로 나뉩니다.
-
-## 개발
-
-```powershell
-npm run check
-npm test
-npm run package:store
-```
-
-스토어 패키지는 `dist/` 아래에 생성되며 `manifest.json`, `src/`, `assets/`만 포함합니다.
