@@ -2,13 +2,90 @@
 
 # AllSight Local AI Translator
 
-Chrome MV3 웹 페이지 번역 확장입니다. Chrome 내장 AI(`LanguageModel`, Gemini Nano) 또는 사용자가 지정한 OpenAI 호환 Local LLM API로 현재 페이지의 DOM 텍스트를 번역합니다.
+<p align="center">
+  <a href="#english">English</a> · <a href="#korean">한국어</a>
+</p>
+
+## English
+
+AllSight Local AI Translator is a Chrome MV3 extension that translates web page DOM text with Chrome built-in AI (`LanguageModel`, Gemini Nano) or an OpenAI-compatible Local LLM endpoint configured by the user.
+
+## Idea
+
+The project was inspired by X.com (Twitter) automatic translation. The goal is to make web page translation more natural with an LLM while keeping the translation path local or user-controlled.
+
+The default design uses Chrome Gemini Nano. In practice, Gemini Nano has been limited for long page translation quality and speed, so Local LLM support was added for users who already run stronger local models.
+
+Chrome AI mode does not use Google Translate, the `Translator API`, or Gemini Cloud API as a translation engine. Local LLM mode calls only the endpoint saved in the extension options.
+
+## Install
+
+1. Open `chrome://extensions`.
+2. Enable Developer mode.
+3. Load this folder as an unpacked extension.
+4. For Chrome AI mode, enable these flags if needed.
+   - `chrome://flags/#optimization-guide-on-device-model`
+   - `chrome://flags/#prompt-api-for-gemini-nano`
+5. Check model status in `chrome://on-device-internals`.
+
+## Use
+
+Right-click a web page and choose an AllSight menu item.
+
+- `AllSight: Translate visible page`
+- `AllSight: Translate full page`
+- `AllSight: Restore original`
+- `AllSight: Check support`
+- `AllSight: Options`
+
+Keyboard shortcuts:
+
+- `Ctrl+Shift+Y`: check support
+- `Ctrl+Shift+L`: translate visible page
+- `Ctrl+Shift+F`: translate full page
+- `Ctrl+Shift+U`: stop and restore original text
+
+## Local LLM
+
+For first-time Local LLM users, [LM Studio](https://lmstudio.ai/download) is recommended.
+
+1. Install LM Studio.
+2. Download and load a translation model in LM Studio.
+3. Start the API server from the Developer tab.
+4. Turn on `Use Local LLM` in the extension options.
+5. Enter an API base URL, for example `http://localhost:1234/v1`.
+6. Click `Check API`, then select a model.
+7. Save and run translation from the page context menu.
+
+LM Studio docs:
+
+- [Download](https://lmstudio.ai/download)
+- [API server](https://lmstudio.ai/docs/developer/core/server)
+- [OpenAI-compatible endpoints](https://lmstudio.ai/docs/developer/openai-compat)
+
+Recommended models are default Gemma4 or default Qwen3.6 families. If the selected model name is detected as `Gemma4`, requests include `temperature=1.0`, `top_p=0.95`, and `top_k=64`. Other models do not receive extra sampling overrides.
+
+`Local LLM chunk text count` is the number of DOM text fragments grouped into one request. `Local LLM chunk character limit` is the total source-text character budget for the same request. A new request starts when either limit is reached.
+
+## Development
+
+```powershell
+npm run check
+npm test
+npm run package:store
+```
+
+The store package is generated under `dist/` and includes only `manifest.json`, `src/`, and `assets/`.
+
+## 한국어
+
+AllSight Local AI Translator는 Chrome 내장 AI(`LanguageModel`, Gemini Nano) 또는 사용자가 지정한 OpenAI 호환 Local LLM API로 현재 웹 페이지의 DOM 텍스트를 번역하는 Chrome MV3 확장입니다.
 
 ## 제작 아이디어
 
 X.com(트위터)의 자동 번역 경험에서 출발해, LLM으로 웹 페이지 전체를 자연스럽게 번역하는 기능을 구상했습니다.
 
-기본 설계는 Chrome의 Gemini Nano를 이용합니다. 다만 현재 Gemini Nano는 긴 페이지 번역 품질과 속도에서 부족한 부분이 있었고, 개발 중 체감상 Gemma3 또는 Gemma4 E2B급 소형 모델 기반일 가능성을 염두에 두었습니다. 그래서 사용자가 가진 Local LLM을 연결하는 기능을 추가했습니다.
+기본 설계는 Chrome의 Gemini Nano를 이용합니다. 다만 현재 Gemini Nano는 긴 페이지 번역 품질과 속도에서 부족한 부분이 있어, 더 강한 로컬 모델을 쓰는 사용자를 위해 Local LLM 연동 기능을 추가했습니다.
 
 Chrome AI 모드는 Google Translate, `Translator API`, Gemini Cloud API를 번역 엔진으로 호출하지 않습니다. Local LLM 모드는 옵션에서 지정한 endpoint만 호출합니다.
 
@@ -66,4 +143,7 @@ LM Studio 공식 문서:
 ```powershell
 npm run check
 npm test
+npm run package:store
 ```
+
+스토어 패키지는 `dist/` 아래에 생성되며 `manifest.json`, `src/`, `assets/`만 포함합니다.

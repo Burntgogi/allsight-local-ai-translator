@@ -51,9 +51,12 @@ test("options page exposes UI language switch and LM Studio guide links", () => 
   assert.match(optionsHtml, /https:\/\/lmstudio\.ai\/docs\/developer\/openai-compat/);
 });
 
-test("readme is Korean and documents LM Studio local LLM setup", () => {
+test("readme defaults to English and keeps Korean docs with centered language switch", () => {
   const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
 
+  assert.match(readme, /<p align="center">/);
+  assert.ok(readme.indexOf("## English") < readme.indexOf("## 한국어"));
+  assert.match(readme, /AllSight Local AI Translator is a Chrome MV3 extension/);
   assert.match(readme, /X\.com\(트위터\)/);
   assert.match(readme, /Chrome의 Gemini Nano/);
   assert.match(readme, /Local LLM/);
