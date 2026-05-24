@@ -1,0 +1,65 @@
+{
+  "manifest_version": 3,
+  "name": "AllSight Local AI Translator",
+  "version": "0.1.0",
+  "description": "Private web page translation with Chrome AI or a Local LLM endpoint you control.",
+  "minimum_chrome_version": "138",
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost/*",
+    "https://localhost/*",
+    "http://127.0.0.1/*",
+    "https://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "options_page": "src/options.html",
+  "commands": {
+    "ai-pt-probe-capability": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y"
+      },
+      "description": "AllSight check support"
+    },
+    "ai-pt-translate-visible": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L"
+      },
+      "description": "AllSight translate visible page"
+    },
+    "ai-pt-translate-full": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F"
+      },
+      "description": "AllSight translate full page"
+    },
+    "ai-pt-restore-page": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+U"
+      },
+      "description": "AllSight restore original"
+    }
+  },
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_title": "AllSight Local AI Translator",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  }
+}

@@ -1,0 +1,149 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: Canvas;
+  color: CanvasText;
+}
+
+main {
+  box-sizing: border-box;
+  max-width: 680px;
+  padding: 24px;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 650;
+  margin: 0 0 22px;
+}
+
+h2 {
+  font-size: 15px;
+  font-weight: 650;
+  margin: 0 0 12px;
+}
+
+section {
+  border-top: 1px solid color-mix(in srgb, CanvasText 14%, transparent);
+  padding: 18px 0;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 14px 0 6px;
+}
+
+select,
+input[type="text"],
+input[type="url"],
+input[type="number"] {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid color-mix(in srgb, CanvasText 25%, transparent);
+  border-radius: 6px;
+  background: Canvas;
+  color: CanvasText;
+  font: inherit;
+  padding: 6px 8px;
+}
+
+.number-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-top: 16px;
+}
+
+.number-grid label {
+  margin: 0;
+}
+
+.number-grid input {
+  margin-top: 6px;
+}
+
+select:disabled,
+input:disabled {
+  opacity: 0.58;
+}
+
+.check-row {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin: 0 0 8px;
+}
+
+.check-row input {
+  margin: 0;
+}
+
+.row {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.guide-list {
+  color: color-mix(in srgb, CanvasText 76%, transparent);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.help-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: 12px 0 0;
+}
+
+.help-links a {
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.help-links a:hover {
+  text-decoration: underline;
+}
+
+button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+  padding: 0 16px;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.muted,
+.recommendation {
+  color: color-mix(in srgb, CanvasText 70%, transparent);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+
+.recommendation {
+  color: #15803d;
+  font-weight: 650;
+}

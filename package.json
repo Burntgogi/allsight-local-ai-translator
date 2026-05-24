@@ -1,0 +1,11 @@
+{
+  "name": "allsight-local-ai-translator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Private Chrome MV3 web page translator for Chrome AI or an OpenAI-compatible Local LLM.",
+  "scripts": {
+    "check": "node --check src/background.js && node --check src/content-core.js && node --check src/content.js && node --check src/settings.js && node --check src/local-llm.js && node --check src/options.js && node --check tests/content-core.test.js && node --check tests/local-llm.test.js && node --check tests/manifest-assets.test.js && node --check tests/settings.test.js",
+    "test": "node --test tests/*.test.js",
+    "package:store": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"if (Test-Path dist) { Remove-Item -Recurse -Force dist }; New-Item -ItemType Directory -Force dist | Out-Null; Compress-Archive -Path manifest.json,src,assets -DestinationPath dist/allsight-local-ai-translator-0.1.0.zip -Force\""
+  }
+}

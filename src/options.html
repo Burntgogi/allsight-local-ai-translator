@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AllSight Local AI Translator</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main>
+      <h1 data-i18n="heading">AllSight Local AI Translator 설정</h1>
+
+      <section>
+        <h2 data-i18n="displaySection">표시 언어</h2>
+        <label for="ui-language" data-i18n="uiLanguageLabel">옵션 언어</label>
+        <select id="ui-language"></select>
+      </section>
+
+      <section>
+        <h2 data-i18n="targetSection">번역 언어</h2>
+        <label for="target-language" data-i18n="targetLanguageLabel">목적 언어</label>
+        <select id="target-language"></select>
+
+        <label for="custom-language" data-i18n="customLanguageLabel">직접 언어코드</label>
+        <input id="custom-language" type="text" inputmode="latin" autocomplete="off" data-i18n-placeholder="customLanguagePlaceholder" placeholder="예: zh-Hant, pt-BR, id">
+        <p id="resolved" class="muted"></p>
+      </section>
+
+      <section>
+        <h2 data-i18n="engineSection">번역 엔진</h2>
+        <label class="check-row">
+          <input id="local-llm-enabled" type="checkbox">
+          <span data-i18n="localLlmEnabled">Local LLM 사용</span>
+        </label>
+        <p class="muted" data-i18n="engineHelp">끄면 Chrome 내장 AI(LanguageModel)를 사용합니다. 켜면 Chrome 내장 AI 대신 OpenAI 호환 Local LLM API를 사용합니다.</p>
+
+        <div id="local-llm-panel">
+          <label for="local-llm-base-url" data-i18n="baseUrlLabel">OpenAI 호환 API 주소</label>
+          <input id="local-llm-base-url" type="url" spellcheck="false" autocomplete="off" data-i18n-placeholder="baseUrlPlaceholder" placeholder="예: http://localhost:1234/v1">
+
+          <div class="row">
+            <button id="check-local-api" type="button" data-i18n="checkApi">API 확인</button>
+            <span id="local-api-status" class="muted"></span>
+          </div>
+
+          <label for="local-llm-model" data-i18n="modelLabel">모델 선택</label>
+          <select id="local-llm-model"></select>
+          <p class="recommendation" data-i18n="recommendation">언어번역은 Gemma4 모델 (E4B, 26B) 추천</p>
+          <p id="gemma-options" class="muted"></p>
+
+          <div class="number-grid">
+            <label for="local-llm-chunk-max-items">
+              <span data-i18n="chunkItemsLabel">Local LLM 청크 텍스트 개수</span>
+              <input id="local-llm-chunk-max-items" type="number" min="1" max="200" step="1">
+            </label>
+
+            <label for="local-llm-chunk-max-chars">
+              <span data-i18n="chunkCharsLabel">Local LLM 청크 최대 문자 수</span>
+              <input id="local-llm-chunk-max-chars" type="number" min="500" max="50000" step="100">
+            </label>
+
+            <label for="local-llm-full-page-retry-limit">
+              <span data-i18n="retryLimitLabel">전체 페이지 누락 재번역 횟수</span>
+              <input id="local-llm-full-page-retry-limit" type="number" min="0" max="10" step="1">
+            </label>
+          </div>
+          <p class="muted" data-i18n="chunkHelpOne">청크 텍스트 개수는 한 번의 Local LLM 요청에 묶어 보내는 DOM 텍스트 조각 수입니다. 청크 최대 문자 수는 같은 요청에 포함할 원문 텍스트의 총 문자 기준입니다.</p>
+          <p class="muted" data-i18n="chunkHelpTwo">둘 중 하나가 먼저 한계에 닿으면 다음 요청으로 나뉩니다. 값을 키우면 요청 횟수는 줄지만 일부 id 누락 가능성이 커질 수 있습니다. Chrome 내장 AI는 기존 작은 chunk 설정을 그대로 사용합니다.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2 data-i18n="lmStudioSection">LM Studio 시작</h2>
+        <ol class="guide-list">
+          <li data-i18n="lmStepDownload">LM Studio를 설치합니다.</li>
+          <li data-i18n="lmStepModel">LM Studio에서 번역용 모델을 다운로드하고 로드합니다.</li>
+          <li data-i18n="lmStepServer">Developer 탭에서 Start server를 켭니다.</li>
+          <li data-i18n="lmStepOptions">이 옵션 화면에 API 주소를 입력하고 API 확인을 누른 뒤 모델을 선택합니다.</li>
+        </ol>
+        <p class="help-links">
+          <a href="https://lmstudio.ai/download" target="_blank" rel="noreferrer" data-i18n="lmDownloadLink">LM Studio 다운로드</a>
+          <a href="https://lmstudio.ai/docs/developer/core/server" target="_blank" rel="noreferrer" data-i18n="lmServerDocsLink">API 서버 사용법</a>
+          <a href="https://lmstudio.ai/docs/developer/openai-compat" target="_blank" rel="noreferrer" data-i18n="lmOpenAiDocsLink">OpenAI 호환 endpoint</a>
+        </p>
+      </section>
+
+      <section>
+        <h2 data-i18n="usageSection">사용방법</h2>
+        <p class="muted" data-i18n="usageHelpOne">페이지에서 우클릭 후 AllSight 메뉴의 “보이는 페이지만 번역” 또는 “전체 페이지 번역”을 선택합니다. 번역 중 “번역 해제”를 누르면 진행 중인 작업을 중지하고 원문으로 복원합니다.</p>
+        <p class="muted" data-i18n="usageHelpTwo">Local LLM은 LM Studio, Ollama 등 OpenAI 호환 서버의 기본 설정을 따릅니다. Gemma4 모델을 선택한 경우에만 temperature=1.0, top_p=0.95, top_k=64를 요청에 포함합니다.</p>
+      </section>
+
+      <div class="row">
+        <button id="save" type="button" data-i18n="save">저장</button>
+        <span id="status" role="status" class="muted"></span>
+      </div>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>
