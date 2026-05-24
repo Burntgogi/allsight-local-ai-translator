@@ -77,6 +77,8 @@ npm run package:store
 
 The store package is generated under `dist/` and includes only `manifest.json`, `src/`, and `assets/`.
 
+<a id="korean"></a>
+
 ## 한국어
 
 AllSight Local AI Translator는 Chrome 내장 AI(`LanguageModel`, Gemini Nano) 또는 사용자가 지정한 OpenAI 호환 Local LLM API로 현재 웹 페이지의 DOM 텍스트를 번역하는 Chrome MV3 확장입니다.

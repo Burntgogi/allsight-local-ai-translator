@@ -55,6 +55,7 @@ test("readme defaults to English and keeps Korean docs with centered language sw
   const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
 
   assert.match(readme, /<p align="center">/);
+  assert.match(readme, /<a id="korean"><\/a>/);
   assert.ok(readme.indexOf("## English") < readme.indexOf("## 한국어"));
   assert.match(readme, /AllSight Local AI Translator is a Chrome MV3 extension/);
   assert.match(readme, /X\.com\(트위터\)/);
