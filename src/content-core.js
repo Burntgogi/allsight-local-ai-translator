@@ -33,6 +33,14 @@
   const STRICT_OUTPUT_LANGUAGES = new Set(["en", "ja", "es"]);
   const NATURAL_TRANSLATION_STYLE_INSTRUCTION =
     "Avoid literal, translationese phrasing; translate as naturally and idiomatically as possible while strictly preserving the source tone and content. Do not distort factual relationships from the source, and do not over-localize proper nouns.";
+  const LANGUAGE_NAMES = {
+    ko: "Korean (한국어)",
+    en: "English",
+    ja: "Japanese",
+    es: "Spanish",
+    de: "German",
+    fr: "French"
+  };
 
   function canonicalizeLanguageCode(languageCode, fallback = "ko") {
     const cleaned = String(languageCode || "").trim().replace(/_/g, "-");
@@ -56,6 +64,11 @@
 
   function isStrictOutputLanguage(languageCode) {
     return STRICT_OUTPUT_LANGUAGES.has(languageBase(languageCode));
+  }
+
+  function targetLanguageName(languageCode) {
+    const canonical = canonicalizeLanguageCode(languageCode);
+    return LANGUAGE_NAMES[languageBase(canonical)] || canonical;
   }
 
   function normalizeWhitespace(text) {
@@ -251,20 +264,25 @@
     const forceTargetLanguage = options.forceTargetLanguage === true;
     const retryMissing = options.retryMissing === true;
     const base = languageBase(targetLanguage);
+    const targetName = targetLanguageName(targetLanguage);
     const targetLanguageRules = base === "ko"
       ? [
+        "Target language is Korean (한국어).",
         "translatedText must be natural Korean written in Hangul.",
+        "Translate Japanese, English, and other source languages into Korean. Do not copy Japanese source text into translatedText.",
+        "For short UI labels, still translate into Korean when a normal Korean label exists.",
         "Do not leave non-Korean source text untranslated unless it is a name, URL, code, product label, or already Korean text.",
         "If an input item is already Korean, return that Korean text unchanged."
       ]
       : [
-        `translatedText must be natural ${targetLanguage}.`,
-        `Do not leave source text untranslated unless it is a name, URL, code, product label, or already ${targetLanguage}.`,
-        `If an input item is already ${targetLanguage}, return that text unchanged.`
+        `Target language is ${targetName}.`,
+        `translatedText must be natural ${targetName}.`,
+        `Do not leave source text untranslated unless it is a name, URL, code, product label, or already ${targetName}.`,
+        `If an input item is already ${targetName}, return that text unchanged.`
       ];
     return [
       "You are an AI page translation engine.",
-      `Translate every input item into ${targetLanguage}.`,
+      `Translate every input item into ${targetName}.`,
       forceTargetLanguage
         ? "Use the requested target language even if it is not declared as a model capability."
         : "Use the model's declared output language naturally.",
@@ -275,10 +293,13 @@
       retryMissing
         ? "This is a retry for items omitted in a previous response. Return every input id exactly once."
         : "",
-      "Return only a JSON array. Each item must contain exactly id and translatedText.",
+      "Input objects contain id and sourceText.",
+      "Return only a JSON array. Each output item must contain exactly id and translatedText.",
+      "Never use the key text in the output.",
+      "Output example: [{\"id\":\"t1\",\"translatedText\":\"한국어 번역\"}]",
       "Do not add explanations, markdown, comments, or extra fields.",
       "",
-      JSON.stringify(items.map((item) => ({ id: item.id, text: item.text })))
+      JSON.stringify(items.map((item) => ({ id: item.id, sourceText: item.text })))
     ].join("\n");
   }
 
@@ -350,6 +371,8 @@
       const id = String(entry.id || "");
       const translatedText = typeof entry.translatedText === "string"
         ? entry.translatedText
+        : typeof entry.translation === "string"
+          ? entry.translation
         : "";
 
       if (idSet.has(id) && translatedText.trim()) {
@@ -412,6 +435,7 @@
     canonicalizeLanguageCode,
     languageBase,
     isStrictOutputLanguage,
+    targetLanguageName,
     normalizeWhitespace,
     shouldTranslateText,
     containsHangul,
