@@ -86,6 +86,8 @@ export function buildLocalLlmChatPayload({ model, prompt, targetLanguage }) {
   if (!selectedModel) {
     throw new Error("Local LLM 모델을 선택해야 합니다.");
   }
+  const targetBase = String(targetLanguage || "").toLowerCase().split("-")[0];
+  const targetLabel = targetBase === "ko" ? "Korean (한국어)" : targetLanguage;
 
   const payload = {
     model: selectedModel,
@@ -94,9 +96,13 @@ export function buildLocalLlmChatPayload({ model, prompt, targetLanguage }) {
         role: "system",
         content: [
           "You are an AI page translation engine.",
-          `The required output language is ${targetLanguage}.`,
+          `The required output language is ${targetLabel}.`,
+          targetBase === "ko"
+            ? "All translatedText values must be Korean written in Hangul. Do not answer in Japanese unless the source is a proper noun or product label that should remain unchanged."
+            : `All translatedText values must be ${targetLabel}.`,
           "Translate visible page text only from the user-provided JSON items.",
-          "Return valid JSON only when JSON is requested.",
+          "Input items use sourceText. Output items must use translatedText.",
+          "Return valid JSON only when JSON is requested. Never use the key text in the output.",
           "Do not call external translation services."
         ].join(" ")
       },

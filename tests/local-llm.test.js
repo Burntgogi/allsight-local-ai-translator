@@ -61,6 +61,9 @@ test("detects Gemma4 model names and applies only recommended sampling options",
   });
 
   assert.equal(payload.model, "google/gemma-4-e4b-it");
+  assert.match(payload.messages[0].content, /Korean \(한국어\)/);
+  assert.match(payload.messages[0].content, /must be Korean written in Hangul/);
+  assert.match(payload.messages[0].content, /Never use the key text/);
   assert.equal(payload.temperature, 1.0);
   assert.equal(payload.top_p, 0.95);
   assert.equal(payload.top_k, 64);
