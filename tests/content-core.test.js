@@ -195,6 +195,7 @@ test("buildTranslationPrompt includes strict JSON-only instruction and ids", () 
   assert.match(prompt, /"id":"t1"/);
   assert.match(prompt, /"sourceText":"Hello"/);
   assert.doesNotMatch(prompt, /"text":"Hello"/);
+  assert.match(prompt, /"translatedText":"한국어 번역"/);
 });
 
 test("translation prompts distinguish strict and forced language modes", () => {
@@ -232,6 +233,18 @@ test("non-Korean target prompts do not preserve Korean as the output language", 
     forceTargetLanguage: false
   });
   assert.doesNotMatch(probePrompt, /Do not answer in English/);
+});
+
+test("non-Korean target prompts never demonstrate Korean translatedText", () => {
+  for (const targetLanguage of ["en", "en-US", "ja", "ja-JP", "es", "de", "fr", "pt-BR"]) {
+    for (const forceTargetLanguage of [false, true]) {
+      const prompt = core.buildTranslationPrompt([{ id: "t1", text: "Hello" }], targetLanguage, {
+        forceTargetLanguage
+      });
+      assert.doesNotMatch(prompt, /"translatedText":"한국어 번역"/, targetLanguage);
+      assert.match(prompt, /Each output item must contain exactly id and translatedText/);
+    }
+  }
 });
 
 test("parseTranslationResponse accepts translation alias but not copied source text key", () => {

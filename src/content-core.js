@@ -296,7 +296,9 @@
       "Input objects contain id and sourceText.",
       "Return only a JSON array. Each output item must contain exactly id and translatedText.",
       "Never use the key text in the output.",
-      "Output example: [{\"id\":\"t1\",\"translatedText\":\"한국어 번역\"}]",
+      base === "ko"
+        ? "Output example: [{\"id\":\"t1\",\"translatedText\":\"한국어 번역\"}]"
+        : "",
       "Do not add explanations, markdown, comments, or extra fields.",
       "",
       JSON.stringify(items.map((item) => ({ id: item.id, sourceText: item.text })))
