@@ -1383,8 +1383,12 @@
             return NodeFilter.FILTER_REJECT;
           }
           if (options.excludeTranslatedNodes && state.translatedNodes.has(node)) {
-            metrics.rejectedByTranslatedNode += 1;
-            return NodeFilter.FILTER_REJECT;
+            const original = state.originals.get(state.nodeIds.get(node));
+            if (original?.translatedText === node.nodeValue) {
+              metrics.rejectedByTranslatedNode += 1;
+              return NodeFilter.FILTER_REJECT;
+            }
+            state.translatedNodes.delete(node);
           }
           if (
             options.skipTargetLanguageText &&
@@ -1421,6 +1425,13 @@
       }
 
       let id = state.nodeIds.get(node);
+      const original = state.originals.get(id);
+      if (original && node.nodeValue !== original.text && node.nodeValue !== original.translatedText) {
+        // A new page value starts a new request identity, invalidating replies for the old text.
+        state.originals.delete(id);
+        state.translatedNodes.delete(node);
+        id = null;
+      }
       if (!id) {
         id = `t${state.nextId}`;
         state.nextId += 1;
@@ -1473,11 +1484,12 @@
     for (const item of items) {
       const translated = translations.get(item.id);
       const original = state.originals.get(item.id);
-      if (!translated || !original?.node?.isConnected) {
+      if (!translated || !original?.node?.isConnected || original.node.nodeValue !== original.text) {
         continue;
       }
 
-      original.node.nodeValue = core.preserveOuterWhitespace(original.text, translated);
+      original.translatedText = core.preserveOuterWhitespace(original.text, translated);
+      original.node.nodeValue = original.translatedText;
       state.translatedNodes.add(original.node);
       ids.push(item.id);
       if (!appliedIds.has(item.id)) {
@@ -1495,7 +1507,8 @@
     }
 
     for (const original of state.originals.values()) {
-      if (original.node?.isConnected) {
+      if (original.node?.isConnected && typeof original.translatedText === "string" &&
+          original.node.nodeValue === original.translatedText) {
         original.node.nodeValue = original.text;
       }
     }
