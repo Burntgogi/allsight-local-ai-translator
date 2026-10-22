@@ -3,6 +3,25 @@ const assert = require("node:assert/strict");
 
 const core = require("../src/content-core.js");
 
+function element(tagName, parentElement = null, isContentEditable = false) {
+  return { tagName, parentElement, isContentEditable, closest: () => null };
+}
+
+test("excluded elements also exclude nested text containers", () => {
+  for (const tag of ["CODE", "PRE", "BUTTON", "svg", "CANVAS"]) {
+    const excluded = element(tag, element("BODY"));
+    assert.equal(core.isElementExcluded(element("SPAN", element("SPAN", excluded))), true, tag);
+  }
+  assert.equal(core.isElementExcluded(element("SPAN", element("P"))), false);
+});
+
+test("editable text is excluded using the browser's computed editability", () => {
+  // isContentEditable covers empty/true/plaintext-only attributes and inheritance.
+  assert.equal(core.isElementExcluded(element("SPAN", element("DIV"), true)), true);
+  // A contenteditable=false island is not itself an editor.
+  assert.equal(core.isElementExcluded(element("SPAN", element("DIV"), false)), false);
+});
+
 test("shouldTranslateText rejects empty, punctuation-only, and numeric-only text", () => {
   assert.equal(core.shouldTranslateText("   "), false);
   assert.equal(core.shouldTranslateText("... --- !!!"), false);

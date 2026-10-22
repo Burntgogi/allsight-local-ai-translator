@@ -390,11 +390,17 @@
       return true;
     }
 
-    if (EXCLUDED_TAGS.has(element.tagName)) {
+    if (element.isContentEditable) {
       return true;
     }
 
-    if (element.closest("[data-ai-page-translator-ui], [data-gemini-nano-translator-ui], [hidden], [aria-hidden='true'], [contenteditable='true']")) {
+    for (let current = element; current; current = current.parentElement) {
+      if (EXCLUDED_TAGS.has(String(current.tagName).toUpperCase())) {
+        return true;
+      }
+    }
+
+    if (element.closest("[data-ai-page-translator-ui], [data-gemini-nano-translator-ui], [hidden], [aria-hidden='true']")) {
       return true;
     }
 
